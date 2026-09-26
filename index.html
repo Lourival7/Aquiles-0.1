@@ -86,7 +86,7 @@
 
         <div class="mensagem">
             <strong>Aquiles:</strong>
-            <p>Olá! Eu sou o Aquiles 0.1. Essa é nossa primeira conversa.</p>
+            <p id="saudacao">Carregando minha memória...</p>
         </div>
 
         <div id="mensagens"></div>
@@ -99,6 +99,23 @@
     </div>
 
     <script>
+        let memoria = null;
+
+        async function carregarMemoria() {
+            try {
+                const resposta = await fetch("memoria.json");
+                memoria = await resposta.json();
+
+                const nome = memoria.usuario.nome;
+
+                document.getElementById("saudacao").textContent =
+                    "Boa noite, " + nome + ". Eu sou o Aquiles 0.1. Minha memória inicial está funcionando.";
+            } catch (erro) {
+                document.getElementById("saudacao").textContent =
+                    "Não consegui acessar minha memória.";
+            }
+        }
+
         function enviarMensagem() {
             const campo = document.getElementById("campoMensagem");
             const mensagens = document.getElementById("mensagens");
@@ -119,12 +136,14 @@
             mensagens.innerHTML += `
                 <div class="mensagem">
                     <strong>Aquiles:</strong>
-                    <p>Recebi sua mensagem. Ainda estou aprendendo, mas essa é nossa primeira troca.</p>
+                    <p>Recebi sua mensagem, ${memoria ? memoria.usuario.nome : ""}. Ainda estou aprendendo.</p>
                 </div>
             `;
 
             campo.value = "";
         }
+
+        carregarMemoria();
     </script>
 
 </body>
