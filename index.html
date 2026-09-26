@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Aquiles 0.1</title>
 
     <style>
@@ -72,6 +73,12 @@
         button:hover {
             background: #1d4ed8;
         }
+
+        .status {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -86,38 +93,73 @@
 
         <div class="mensagem">
             <strong>Aquiles:</strong>
-            <p id="saudacao">Carregando minha memória...</p>
+            <p id="saudacao">Olá, Lourival. Estou conectando minha memória...</p>
+            <div class="status" id="status">Conectando ao banco de memória...</div>
         </div>
 
         <div id="mensagens"></div>
 
         <div class="entrada">
-            <input id="campoMensagem" type="text" placeholder="Digite uma mensagem...">
-            <button onclick="enviarMensagem()">Enviar</button>
+            <input
+                id="campoMensagem"
+                type="text"
+                placeholder="Digite uma mensagem..."
+            >
+
+            <button onclick="enviarMensagem()">
+                Enviar
+            </button>
         </div>
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
-        let memoria = null;
 
-        async function carregarMemoria() {
-            try {
-                const resposta = await fetch("memoria.json");
-                memoria = await resposta.json();
+        const SUPABASE_URL = "https://qqhltwlfooiyaalirwbi.supabase.co";
 
-                const nome = memoria.usuario.nome;
+        const SUPABASE_PUBLISHABLE_KEY = sb_publishable_U1CpDb91_Q3Nn05Hfu9Wsw_9MT5kEhY;
 
-                document.getElementById("saudacao").textContent =
-                    "Boa noite, " + nome + ". Eu sou o Aquiles 0.1. Minha memória inicial está funcionando.";
-            } catch (erro) {
-                document.getElementById("saudacao").textContent =
-                    "Não consegui acessar minha memória.";
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+        async function testarMemoria() {
+
+            const status = document.getElementById("status");
+            const saudacao = document.getElementById("saudacao");
+
+            const { data, error } = await supabaseClient
+                .from("memorias")
+                .select("*")
+                .limit(1);
+
+            if (error) {
+
+                console.log(error);
+
+                status.textContent =
+                    "Banco conectado, mas ainda precisamos configurar a segurança da memória.";
+
+                return;
             }
+
+            saudacao.textContent =
+                "Boa noite, Lourival. Eu sou o Aquiles 0.1.";
+
+            status.textContent =
+                "Minha conexão com a memória está funcionando.";
+
+            console.log("Memória:", data);
         }
 
-        function enviarMensagem() {
+
+        async function enviarMensagem() {
+
             const campo = document.getElementById("campoMensagem");
+
             const mensagens = document.getElementById("mensagens");
 
             const texto = campo.value.trim();
@@ -133,17 +175,42 @@
                 </div>
             `;
 
-            mensagens.innerHTML += `
-                <div class="mensagem">
-                    <strong>Aquiles:</strong>
-                    <p>Recebi sua mensagem, ${memoria ? memoria.usuario.nome : ""}. Ainda estou aprendendo.</p>
-                </div>
-            `;
+            const { error } = await supabaseClient
+                .from("memorias")
+                .insert({
+                    conteudo: texto,
+                    categoria: "conversa",
+                    fonte: "Lourival",
+                    tipo: "conhecimento"
+                });
+
+            if (error) {
+
+                console.log(error);
+
+                mensagens.innerHTML += `
+                    <div class="mensagem">
+                        <strong>Aquiles:</strong>
+                        <p>Recebi sua mensagem, mas minha memória ainda está sendo configurada.</p>
+                    </div>
+                `;
+
+            } else {
+
+                mensagens.innerHTML += `
+                    <div class="mensagem">
+                        <strong>Aquiles:</strong>
+                        <p>Recebi sua mensagem e guardei na minha memória.</p>
+                    </div>
+                `;
+            }
 
             campo.value = "";
         }
 
-        carregarMemoria();
+
+        testarMemoria();
+
     </script>
 
 </body>
