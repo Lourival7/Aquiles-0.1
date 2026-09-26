@@ -158,6 +158,7 @@
 
         async function enviarMensagem() {
             alert("O botão Enviar está funcionando!");
+            alert("Vou tentar gravar no Supabase!");
             const campo = document.getElementById("campoMensagem");
 
             const mensagens = document.getElementById("mensagens");
@@ -174,7 +175,7 @@
                     <p>${texto}</p>
                 </div>
             `;
-alert("Vou tentar gravar no Supabase!");
+
 
             const { error } = await supabaseClient
                 .from("memorias")
