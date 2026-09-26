@@ -42,6 +42,11 @@
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 15px;
+            word-wrap: break-word;
+        }
+
+        .mensagem strong {
+            color: #60a5fa;
         }
 
         .entrada {
@@ -58,6 +63,7 @@
             background: #0f172a;
             color: white;
             font-size: 16px;
+            outline: none;
         }
 
         button {
@@ -70,14 +76,23 @@
             cursor: pointer;
         }
 
-        button:hover {
-            background: #1d4ed8;
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .status {
             color: #94a3b8;
             font-size: 14px;
             margin-top: 10px;
+        }
+
+        .erro {
+            color: #fca5a5;
+        }
+
+        .sucesso {
+            color: #86efac;
         }
     </style>
 </head>
@@ -93,22 +108,30 @@
 
         <div class="mensagem">
             <strong>Aquiles:</strong>
-            <p id="saudacao">Olá, Lourival. Estou conectando minha memória...</p>
-            <div class="status" id="status">Conectando ao banco de memória...</div>
+
+            <p id="saudacao">
+                Olá, Lourival. Estou conectando minha memória...
+            </p>
+
+            <div class="status" id="status">
+                Conectando ao banco de memória...
+            </div>
         </div>
 
         <div id="mensagens"></div>
 
         <div class="entrada">
+
             <input
                 id="campoMensagem"
                 type="text"
                 placeholder="Digite uma mensagem..."
             >
 
-            <button onclick="enviarMensagem()">
+            <button id="botaoEnviar" onclick="enviarMensagem()">
                 Enviar
             </button>
+
         </div>
 
     </div>
@@ -117,34 +140,95 @@
 
     <script>
 
-        const SUPABASE_URL = "https://qqhltwlfooiyaalirwbi.supabase.co";
+        // =====================================================
+        // CONFIGURAÇÃO DO SUPABASE
+        // =====================================================
 
-        const SUPABASE_PUBLISHABLE_KEY = sb_publishable_U1CpDb91_Q3Nn05Hfu9Wsw_9MT5kEhY;
+        const SUPABASE_URL =
+            "https://qqhltwlfooiyaalirwbi.supabase.co";
 
-        const supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+        // =====================================================
+        // COLOQUE SUA PUBLISHABLE KEY AQUI
+        //
+        // NÃO COLOQUE A SECRET KEY.
+        // Use somente a chave que começa com:
+        // sb_publishable_
+        // =====================================================
+
+        const SUPABASE_PUBLISHABLE_KEY =
+        sb_publishable_U1CpDb91_Q3Nn05Hfu9Wsw_9MT5kEhY    
+
+        // =====================================================
+
+        const status = document.getElementById("status");
+        const saudacao = document.getElementById("saudacao");
+        const mensagens = document.getElementById("mensagens");
+        const campoMensagem = document.getElementById("campoMensagem");
+        const botaoEnviar = document.getElementById("botaoEnviar");
+
+
+        // Verificação básica da chave
+        if (
+            !SUPABASE_PUBLISHABLE_KEY ||
+            SUPABASE_PUBLISHABLE_KEY === "COLE_AQUI_SUA_PUBLISHABLE_KEY"
+        ) {
+
+            status.textContent =
+                "A Publishable Key ainda não foi colocada.";
+
+            status.className = "status erro";
+
+        }
+
+
+        // Cria a conexão com o Supabase
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        // =====================================================
+        // TESTAR MEMÓRIA
+        // =====================================================
 
         async function testarMemoria() {
 
-            const status = document.getElementById("status");
-            const saudacao = document.getElementById("saudacao");
+            status.textContent =
+                "Testando conexão com minha memória...";
 
-            const { data, error } = await supabaseClient
-                .from("memorias")
-                .select("*")
-                .limit(1);
+            status.className = "status";
+
+
+            const resultado =
+                await supabaseClient
+                    .from("memorias")
+                    .select("*")
+                    .order("id", { ascending: false })
+                    .limit(20);
+
+
+            const data = resultado.data;
+            const error = resultado.error;
+
 
             if (error) {
 
-                console.log(error);
+                console.error("Erro Supabase:", error);
+
+                saudacao.textContent =
+                    "Estou conectado ao site, mas encontrei um problema ao acessar minha memória.";
 
                 status.textContent =
-                    "Banco conectado, mas ainda precisamos configurar a segurança da memória.";
+                    "Erro ao acessar o banco: " +
+                    error.message;
+
+                status.className = "status erro";
 
                 return;
             }
+
 
             saudacao.textContent =
                 "Boa noite, Lourival. Eu sou o Aquiles 0.1.";
@@ -152,68 +236,214 @@
             status.textContent =
                 "Minha conexão com a memória está funcionando.";
 
-            console.log("Memória:", data);
+            status.className = "status sucesso";
+
+
+            // Mostra memórias anteriores
+            if (data && data.length > 0) {
+
+                data.reverse().forEach(function(memoria) {
+
+                    mostrarMensagem(
+                        "Aquiles — memória",
+                        memoria.conteudo
+                    );
+
+                });
+
+            }
+
         }
 
 
+        // =====================================================
+        // MOSTRAR MENSAGEM NA TELA
+        // =====================================================
+
+        function mostrarMensagem(remetente, texto) {
+
+            const caixa =
+                document.createElement("div");
+
+            caixa.className = "mensagem";
+
+
+            const nome =
+                document.createElement("strong");
+
+            nome.textContent =
+                remetente + ":";
+
+
+            const conteudo =
+                document.createElement("p");
+
+            conteudo.textContent =
+                texto;
+
+
+            caixa.appendChild(nome);
+            caixa.appendChild(conteudo);
+
+            mensagens.appendChild(caixa);
+
+        }
+
+
+        // =====================================================
+        // ENVIAR MENSAGEM
+        // =====================================================
+
         async function enviarMensagem() {
-            alert("O botão Enviar está funcionando!");
-            alert("Vou tentar gravar no Supabase!");
-            const campo = document.getElementById("campoMensagem");
 
-            const mensagens = document.getElementById("mensagens");
+            const texto =
+                campoMensagem.value.trim();
 
-            const texto = campo.value.trim();
 
             if (texto === "") {
                 return;
             }
 
-            mensagens.innerHTML += `
-                <div class="mensagem">
-                    <strong>Você:</strong>
-                    <p>${texto}</p>
-                </div>
-            `;
+
+            // Mostra imediatamente o que Lourival escreveu
+            mostrarMensagem(
+                "Você",
+                texto
+            );
 
 
-            const { error } = await supabaseClient
-                .from("memorias")
-                .insert({
-                    conteudo: texto,
-                    categoria: "conversa",
-                    fonte: "Lourival",
-                    tipo: "conhecimento"
-                });
+            campoMensagem.value = "";
 
-            if (error) {
+            botaoEnviar.disabled = true;
 
-                console.log(error);
+            status.textContent =
+                "Gravando sua mensagem na memória...";
 
-                mensagens.innerHTML += `
-                    <div class="mensagem">
-                        <strong>Aquiles:</strong>
-                        <p>Recebi sua mensagem, mas minha memória ainda está sendo configurada.</p>
-                    </div>
-                `;
+            status.className = "status";
 
-            } else {
 
-                mensagens.innerHTML += `
-                    <div class="mensagem">
-                        <strong>Aquiles:</strong>
-                        <p>Recebi sua mensagem e guardei na minha memória.</p>
-                    </div>
-                `;
+            try {
+
+                const resultado =
+                    await supabaseClient
+                        .from("memorias")
+                        .insert({
+
+                            conteudo: texto,
+
+                            categoria: "conversa",
+
+                            fonte: "Lourival",
+
+                            tipo: "conhecimento"
+
+                        })
+                        .select();
+
+
+                const data = resultado.data;
+                const error = resultado.error;
+
+
+                if (error) {
+
+                    console.error(
+                        "ERRO AO GRAVAR:",
+                        error
+                    );
+
+
+                    status.textContent =
+                        "Não consegui gravar a memória: " +
+                        error.message;
+
+                    status.className =
+                        "status erro";
+
+
+                    mostrarMensagem(
+                        "Aquiles",
+                        "Recebi sua mensagem, mas ocorreu um erro ao gravá-la. O próprio sistema mostrou o motivo acima."
+                    );
+
+
+                } else {
+
+                    console.log(
+                        "Memória gravada:",
+                        data
+                    );
+
+
+                    status.textContent =
+                        "Memória gravada com sucesso.";
+
+                    status.className =
+                        "status sucesso";
+
+
+                    mostrarMensagem(
+                        "Aquiles",
+                        "Recebi sua mensagem e guardei na minha memória."
+                    );
+
+                }
+
+
+            } catch (erro) {
+
+                console.error(
+                    "ERRO GERAL:",
+                    erro
+                );
+
+
+                status.textContent =
+                    "Erro inesperado: " +
+                    erro.message;
+
+                status.className =
+                    "status erro";
+
+
+                mostrarMensagem(
+                    "Aquiles",
+                    "Aconteceu um erro inesperado ao tentar acessar minha memória."
+                );
+
             }
 
-            campo.value = "";
+
+            botaoEnviar.disabled = false;
+
+            campoMensagem.focus();
+
         }
 
 
+        // Permite enviar apertando Enter
+        campoMensagem.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (event.key === "Enter") {
+
+                    enviarMensagem();
+
+                }
+
+            }
+        );
+
+
+        // Inicia o teste da memória
         testarMemoria();
 
     </script>
 
 </body>
 </html>
+ 
+          
+            
+       
