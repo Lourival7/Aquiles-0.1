@@ -4,9 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aquiles 0.1</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: white;
+        }
+
+        .cabecalho {
+            background: #0f172a;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .cabecalho h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .cabecalho p {
+            margin: 6px 0 0;
+            color: #94a3b8;
+        }
+
+        .conversa {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .mensagem {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .entrada {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Aquiles 0.1</h1>
-    <p>Olá! Eu sou o Aquiles.</p>
+
+    <div class="cabecalho">
+        <h1>⚔️ Aquiles 0.1</h1>
+        <p>Seu parceiro de análise esportiva</p>
+    </div>
+
+    <div class="conversa">
+
+        <div class="mensagem">
+            <strong>Aquiles:</strong>
+            <p>Olá! Eu sou o Aquiles 0.1. Essa é nossa primeira conversa.</p>
+        </div>
+
+        <div id="mensagens"></div>
+
+        <div class="entrada">
+            <input id="campoMensagem" type="text" placeholder="Digite uma mensagem...">
+            <button onclick="enviarMensagem()">Enviar</button>
+        </div>
+
+    </div>
+
+    <script>
+        function enviarMensagem() {
+            const campo = document.getElementById("campoMensagem");
+            const mensagens = document.getElementById("mensagens");
+
+            const texto = campo.value.trim();
+
+            if (texto === "") {
+                return;
+            }
+
+            mensagens.innerHTML += `
+                <div class="mensagem">
+                    <strong>Você:</strong>
+                    <p>${texto}</p>
+                </div>
+            `;
+
+            mensagens.innerHTML += `
+                <div class="mensagem">
+                    <strong>Aquiles:</strong>
+                    <p>Recebi sua mensagem. Ainda estou aprendendo, mas essa é nossa primeira troca.</p>
+                </div>
+            `;
+
+            campo.value = "";
+        }
+    </script>
+
 </body>
 </html>
