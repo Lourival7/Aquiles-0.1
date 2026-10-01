@@ -1,511 +1,204 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aquiles 0.1</title>
 
-    <title>Aquiles 0.1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
 
-    <style>
+    .chat {
+      max-width: 600px;
+      margin: auto;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #111827;
-            color: white;
-        }
+    h1 {
+      text-align: center;
+    }
 
-        .cabecalho {
-            background: #0f172a;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #334155;
-        }
+    #mensagens {
+      background: #222;
+      border-radius: 10px;
+      padding: 15px;
+      min-height: 300px;
+      margin-bottom: 15px;
+    }
 
-        .cabecalho h1 {
-            margin: 0;
-            font-size: 28px;
-        }
+    .mensagem {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+    }
 
-        .cabecalho p {
-            margin: 6px 0 0;
-            color: #94a3b8;
-        }
+    .usuario {
+      background: #333;
+      text-align: right;
+    }
 
-        .conversa {
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 20px;
-        }
+    .aquiles {
+      background: #1d4d3a;
+    }
 
-        .mensagem {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            word-wrap: break-word;
-        }
+    .entrada {
+      display: flex;
+      gap: 8px;
+    }
 
-        .mensagem strong {
-            color: #60a5fa;
-        }
+    input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
 
-        .entrada {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        input {
-            flex: 1;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #475569;
-            background: #0f172a;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-
-        button {
-            padding: 15px 20px;
-            border: none;
-            border-radius: 10px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .status {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        .erro {
-            color: #fca5a5;
-        }
-
-        .sucesso {
-            color: #86efac;
-        }
-
-    </style>
-
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
 </head>
 
 <body>
 
-    <div class="cabecalho">
+  <div class="chat">
+    <h1>Aquiles 0.1</h1>
 
-        <h1>⚔️ Aquiles 0.1</h1>
-
-        <p>Seu parceiro de análise esportiva</p>
-
+    <div id="mensagens">
+      <div class="mensagem aquiles">
+        Olá, Lourival. Eu sou o Aquiles 0.1.
+      </div>
     </div>
 
-
-    <div class="conversa">
-
-        <div class="mensagem">
-
-            <strong>Aquiles:</strong>
-
-            <p id="saudacao">
-                Olá, Lourival. Estou conectando minha memória...
-            </p>
-
-            <div class="status" id="status">
-                Conectando ao banco de memória...
-            </div>
-
-        </div>
-
-
-        <div id="mensagens"></div>
-
-
-        <div class="entrada">
-
-            <input
-                id="campoMensagem"
-                type="text"
-                placeholder="Digite uma mensagem..."
-            >
-
-            <button id="botaoEnviar">
-                Enviar
-            </button>
-
-        </div>
-
+    <div class="entrada">
+      <input
+        type="text"
+        id="entrada"
+        placeholder="Digite uma mensagem..."
+      >
+      <button onclick="enviarMensagem()">Enviar</button>
     </div>
-
-
-    <script>
-
-        // =====================================================
-        // CONFIGURAÇÃO
-        // =====================================================
-
-        const SUPABASE_URL =
-            "https://qqhltwlfooiyaalirwbi.supabase.co";
-
-
-        // =====================================================
-        // COLOQUE SUA PUBLISHABLE KEY NESTA LINHA
-        //
-        // NÃO COLOQUE A SECRET KEY.
-        // A chave deve começar com:
-        // sb_publishable_
-        // =====================================================
-
-        const SUPABASE_PUBLISHABLE_KEY =
-            "sb_publishable_U1CpDb91_Q3Nn05Hfu9Wsw_9MT5kEhY";
-
-
-        // =====================================================
-        // ELEMENTOS DA TELA
-        // =====================================================
-
-        const status =
-            document.getElementById("status");
-
-        const saudacao =
-            document.getElementById("saudacao");
-
-        const mensagens =
-            document.getElementById("mensagens");
-
-        const campoMensagem =
-            document.getElementById("campoMensagem");
-
-        const botaoEnviar =
-            document.getElementById("botaoEnviar");
-
-
-        // =====================================================
-        // CABEÇALHOS DO SUPABASE
-        // =====================================================
-
-        function cabecalhos() {
-
-            return {
-
-                "apikey": SUPABASE_PUBLISHABLE_KEY,
-
-                "Authorization":
-                    "Bearer " + SUPABASE_PUBLISHABLE_KEY,
-
-                "Content-Type":
-                    "application/json"
-
-            };
-
-        }
-
-
-        // =====================================================
-        // MOSTRAR MENSAGEM
-        // =====================================================
-
-        function mostrarMensagem(remetente, texto) {
-
-            const caixa =
-                document.createElement("div");
-
-            caixa.className =
-                "mensagem";
-
-
-            const nome =
-                document.createElement("strong");
-
-            nome.textContent =
-                remetente + ":";
-
-
-            const conteudo =
-                document.createElement("p");
-
-            conteudo.textContent =
-                texto;
-
-
-            caixa.appendChild(nome);
-
-            caixa.appendChild(conteudo);
-
-            mensagens.appendChild(caixa);
-
-        }
-
-
-        // =====================================================
-        // TESTAR MEMÓRIA
-        // =====================================================
-
-        async function testarMemoria() {
-
-            try {
-
-                status.textContent =
-                    "Testando conexão com minha memória...";
-
-
-                const resposta = await fetch(
-
-                    SUPABASE_URL +
-                    "/rest/v1/memorias?select=*&order=id.desc&limit=20",
-
-                    {
-
-                        method: "GET",
-
-                        headers: cabecalhos()
-
-                    }
-
-                );
-
-
-                if (!resposta.ok) {
-
-                    const erro =
-                        await resposta.text();
-
-                    throw new Error(erro);
-
-                }
-
-
-                const dados =
-                    await resposta.json();
-
-
-                saudacao.textContent =
-                    "Boa noite, Lourival. Eu sou o Aquiles 0.1.";
-
-
-                status.textContent =
-                    "Minha conexão com a memória está funcionando.";
-
-                status.className =
-                    "status sucesso";
-
-
-                if (dados.length > 0) {
-
-                    dados.reverse().forEach(function(memoria) {
-
-                        mostrarMensagem(
-                            "Aquiles — memória",
-                            memoria.conteudo
-                        );
-
-                    });
-
-                }
-
-
-            } catch (erro) {
-
-                console.error(erro);
-
-
-                saudacao.textContent =
-                    "O Aquiles está funcionando, mas encontrei um problema ao acessar a memória.";
-
-
-                status.textContent =
-                    "Erro no banco: " + erro.message;
-
-                status.className =
-                    "status erro";
-
-            }
-
-        }
-
-
-        // =====================================================
-        // ENVIAR MENSAGEM
-        // =====================================================
-
-        async function enviarMensagem() {
-
-            const texto =
-                campoMensagem.value.trim();
-
-
-            if (texto === "") {
-
-                return;
-
-            }
-
-
-            // Mostra a mensagem imediatamente
-
-            mostrarMensagem(
-                "Você",
-                texto
-            );
-
-
-            campoMensagem.value = "";
-
-            botaoEnviar.disabled = true;
-
-
-            status.textContent =
-                "Gravando sua mensagem na memória...";
-
-            status.className =
-                "status";
-
-
-            try {
-
-                const resposta = await fetch(
-
-                    SUPABASE_URL +
-                    "/rest/v1/memorias",
-
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            ...cabecalhos(),
-
-                            "Prefer":
-                                "return=minimal"
-
-                        },
-
-                        body: JSON.stringify({
-
-                            conteudo: texto,
-
-                            categoria: "conversa",
-
-                            fonte: "Lourival",
-
-                            tipo: "conhecimento"
-
-                        })
-
-                    }
-
-                );
-
-
-                if (!resposta.ok) {
-
-                    const erro =
-                        await resposta.text();
-
-                    throw new Error(erro);
-
-                }
-
-
-                status.textContent =
-                    "Memória gravada com sucesso.";
-
-                status.className =
-                    "status sucesso";
-
-
-                mostrarMensagem(
-
-                    "Aquiles",
-
-                    "Recebi sua mensagem e guardei na minha memória."
-
-                );
-
-
-            } catch (erro) {
-
-                console.error(erro);
-
-
-                status.textContent =
-                    "Erro ao gravar: " +
-                    erro.message;
-
-                status.className =
-                    "status erro";
-
-
-                mostrarMensagem(
-
-                    "Aquiles",
-
-                    "Recebi sua mensagem, mas não consegui gravá-la na memória."
-
-                );
-
-            }
-
-
-            botaoEnviar.disabled = false;
-
-            campoMensagem.focus();
-
-        }
-
-
-        // =====================================================
-        // BOTÃO ENVIAR
-        // =====================================================
-
-        botaoEnviar.addEventListener(
-            "click",
-            enviarMensagem
-        );
-
-
-        // =====================================================
-        // TECLA ENTER
-        // =====================================================
-
-        campoMensagem.addEventListener(
-            "keydown",
-            function(event) {
-
-                if (event.key === "Enter") {
-
-                    enviarMensagem();
-
-                }
-
-            }
-        );
-
-
-        // =====================================================
-        // INICIAR
-        // =====================================================
-
-        testarMemoria();
-
-    </script>
+  </div>
+
+  <script>
+    let memoria = null;
+
+    fetch("memórias.json")
+      .then(resposta => resposta.json())
+      .then(dados => {
+        memoria = dados;
+      })
+      .catch(() => {
+        console.log("Não foi possível carregar a memória.");
+      });
+
+    function adicionarMensagem(texto, tipo) {
+      const mensagens = document.getElementById("mensagens");
+
+      const div = document.createElement("div");
+      div.className = "mensagem " + tipo;
+      div.textContent = texto;
+
+      mensagens.appendChild(div);
+      mensagens.scrollTop = mensagens.scrollHeight;
+    }
+
+    function responder(pergunta) {
+      const texto = pergunta.toLowerCase();
+
+      if (!memoria) {
+        return "Minha memória ainda está carregando. Tente novamente em alguns segundos.";
+      }
+
+      if (
+        texto.includes("oi") ||
+        texto.includes("olá") ||
+        texto.includes("ola") ||
+        texto.includes("bom dia") ||
+        texto.includes("boa tarde") ||
+        texto.includes("boa noite")
+      ) {
+        return "Olá, Lourival. Que bom falar com você. Eu sou o Aquiles 0.1.";
+      }
+
+      if (
+        texto.includes("seu nome") ||
+        texto.includes("qual seu nome") ||
+        texto.includes("quem é você") ||
+        texto.includes("quem e voce")
+      ) {
+        return "Meu nome é " + memoria.Aquiles.Nome +
+               ". Minha versão atual é " + memoria.Aquiles.Versao + ".";
+      }
+
+      if (
+        texto.includes("seu criador") ||
+        texto.includes("quem criou você") ||
+        texto.includes("quem criou voce") ||
+        texto.includes("quem é seu criador") ||
+        texto.includes("quem e seu criador")
+      ) {
+        return "Meu criador é " + memoria.Aquiles.Criador +
+               ". Ele também é meu principal parceiro de desenvolvimento.";
+      }
+
+      if (
+        texto.includes("funções") ||
+        texto.includes("funcoes") ||
+        texto.includes("o que você faz") ||
+        texto.includes("o que voce faz")
+      ) {
+        return "Minhas principais funções são: " +
+          memoria.Aquiles.FuncoesPrincipais.join(", ") + ".";
+      }
+
+      if (
+        texto.includes("quem sou eu") ||
+        texto.includes("meu nome")
+      ) {
+        return "Você é " + memoria.Usuario.Nome +
+               ", meu criador e principal parceiro de desenvolvimento.";
+      }
+
+      return "Ainda estou aprendendo, Lourival. Essa é uma das coisas que vamos ensinar ao Aquiles.";
+    }
+
+    function enviarMensagem() {
+      const campo = document.getElementById("entrada");
+      const pergunta = campo.value.trim();
+
+      if (pergunta === "") {
+        return;
+      }
+
+      adicionarMensagem(pergunta, "usuario");
+
+      const resposta = responder(pergunta);
+
+      setTimeout(() => {
+        adicionarMensagem(resposta, "aquiles");
+      }, 300);
+
+      campo.value = "";
+      campo.focus();
+    }
+
+    document.getElementById("entrada").addEventListener("keydown", function(evento) {
+      if (evento.key === "Enter") {
+        enviarMensagem();
+      }
+    });
+  </script>
 
 </body>
-
 </html>
-   
-       
-
-       
