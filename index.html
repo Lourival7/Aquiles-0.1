@@ -206,9 +206,9 @@
   <script>
   const inputImagem = document.getElementById("imagem");
   const previewImagem = document.getElementById("previewImagem");
-    document.getElementById("editarImagem").addEventListener("click", function () {
+    async function editarImagem() {
   const arquivo = document.getElementById("imagem").files[0];
-  const pedido = document.getElementById("pedidoImagem").value;
+  const pedido = document.getElementById("pedidoImagem").value.trim();
 
   if (!arquivo) {
     alert("Escolha uma imagem primeiro.");
@@ -220,9 +220,12 @@
     return;
   }
 
-  alert("Imagem e pedido prontos para serem enviados.");
-});
+  const formData = new FormData();
+  formData.append("imagem", arquivo);
+  formData.append("pedido", pedido);
 
+  try {
+    const resposta = await fetch("COLE_A_URL
   inputImagem.addEventListener("change", function () {
     const arquivo = this.files[0];
 
