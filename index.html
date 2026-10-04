@@ -201,6 +201,17 @@
       }
     });
   </script>
+  const inputImagem = document.getElementById("imagem");
+  const previewImagem = document.getElementById("previewImagem");
+
+  inputImagem.addEventListener("change", function () {
+    const arquivo = this.files[0];
+
+    if (arquivo) {
+      previewImagem.src = URL.createObjectURL(arquivo);
+      previewImagem.style.display = "block";
+    }
+  });
 
 </body>
 </html>
