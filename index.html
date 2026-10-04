@@ -227,7 +227,7 @@ async function editarImagem() {
   formData.append("pedido", pedido);
 
   try {
-    const resposta = await fetch("COLE_A_URL_DA_FUNCAO_AQUI", {
+    const resposta = await fetch("https://qqhltwlfooiyaalirwbi.supabase.co/functions/v1/editar-imagem", {
       method: "POST",
       body: formData
     });
