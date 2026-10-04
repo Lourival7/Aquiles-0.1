@@ -206,6 +206,22 @@
   <script>
   const inputImagem = document.getElementById("imagem");
   const previewImagem = document.getElementById("previewImagem");
+    document.getElementById("editarImagem").addEventListener("click", function () {
+  const arquivo = document.getElementById("imagem").files[0];
+  const pedido = document.getElementById("pedidoImagem").value;
+
+  if (!arquivo) {
+    alert("Escolha uma imagem primeiro.");
+    return;
+  }
+
+  if (!pedido) {
+    alert("Descreva o que você quer mudar na imagem.");
+    return;
+  }
+
+  alert("Imagem e pedido prontos para serem enviados.");
+});
 
   inputImagem.addEventListener("change", function () {
     const arquivo = this.files[0];
