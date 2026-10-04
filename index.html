@@ -206,7 +206,9 @@
   <script>
   const inputImagem = document.getElementById("imagem");
   const previewImagem = document.getElementById("previewImagem");
-    async function editarImagem() {
+    
+
+async function editarImagem() {
   const arquivo = document.getElementById("imagem").files[0];
   const pedido = document.getElementById("pedidoImagem").value.trim();
 
@@ -225,15 +227,40 @@
   formData.append("pedido", pedido);
 
   try {
-    const resposta = await fetch("COLE_A_URL
-  inputImagem.addEventListener("change", function () {
-    const arquivo = this.files[0];
+    const resposta = await fetch("COLE_A_URL_DA_FUNCAO_AQUI", {
+      method: "POST",
+      body: formData
+    });
 
-    if (arquivo) {
-      previewImagem.src = URL.createObjectURL(arquivo);
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || "Erro ao editar imagem.");
+    }
+
+    if (dados.imagemEditada) {
+      previewImagem.src = dados.imagemEditada;
       previewImagem.style.display = "block";
+      alert("Imagem editada com sucesso.");
+    } else {
+      alert("A resposta veio sem imagem editada.");
+    }
+  } catch (erro) {
+    console.error(erro);
+    alert("Erro ao editar imagem: " + erro.message);
   }
-  });
+}
+
+document.getElementById("editarImagem").addEventListener("click", editarImagem);
+  inputImagem.addEventListener("change", function () {
+  const arquivo = this.files[0];
+
+  if (arquivo) {
+    previewImagem.src = URL.createObjectURL(arquivo);
+    previewImagem.style.display = "block";
+  }
+});
+      
 </script>
 </body>
 </html>
