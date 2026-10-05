@@ -116,6 +116,191 @@
   max-height: 350px;
   border-radius: 10px;
   object-fit: contain;
+} 
+    /* ===== VISUAL NOVO DO AQUILES ===== */
+
+:root {
+  --fundo: #080b14;
+  --painel: #111827;
+  --painel-claro: #182235;
+  --borda: rgba(255,255,255,0.10);
+  --texto: #f8fafc;
+  --texto-suave: #9ca3af;
+  --destaque: #7c3aed;
+  --destaque-2: #2563eb;
+}
+
+/* Fundo geral */
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, #172554 0%, #0b1020 35%, #05070d 100%);
+  color: var(--texto);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Título Aquiles 0.1 */
+h1 {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #ffffff, #a78bfa, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 25px rgba(124, 58, 237, 0.25);
+}
+
+/* Área principal */
+.chat {
+  background: rgba(17, 24, 39, 0.88);
+  border: 1px solid var(--borda);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+}
+
+/* Painel onde ficam imagem + edição */
+.painel-imagem {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* Campo de escolher imagem */
+#imagem {
+  display: none;
+}
+
+/* Botão de escolher imagem */
+label[for="imagem"] {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1f2937, #293548);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+label[for="imagem"]:hover {
+  transform: translateY(-1px);
+  border-color: #8b5cf6;
+  box-shadow: 0 8px 25px rgba(124,58,237,0.22);
+}
+
+/* Botão Editar imagem */
+#editarImagem,
+.editar-imagem,
+button[onclick*="editarImagem"] {
+  min-height: 52px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--destaque), var(--destaque-2));
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 25px rgba(37,99,235,0.22);
+  transition: 0.2s ease;
+}
+
+#editarImagem:hover,
+.editar-imagem:hover,
+button[onclick*="editarImagem"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(124,58,237,0.35);
+}
+
+/* Barra onde fica a descrição/mensagem */
+.barra-mensagem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* Campo de texto */
+.barra-mensagem input,
+.barra-mensagem textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: #0f172a;
+  color: white;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.barra-mensagem input:focus,
+.barra-mensagem textarea:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* Texto de exemplo dentro do campo */
+.barra-mensagem input::placeholder,
+.barra-mensagem textarea::placeholder {
+  color: #64748b;
+}
+
+/* Botões gerais */
+button {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* Preview da imagem */
+#previewImagem {
+  background: #0b1020;
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 8px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* Celular */
+@media (max-width: 600px) {
+  .painel-imagem {
+    flex-wrap: wrap;
+  }
+
+  .barra-mensagem {
+    flex-wrap: wrap;
+  }
+
+  label[for="imagem"],
+  #editarImagem,
+  .editar-imagem,
+  button[onclick*="editarImagem"] {
+    flex: 1;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
 }
   </style>
 </head>
