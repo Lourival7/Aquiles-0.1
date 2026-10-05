@@ -445,10 +445,7 @@ input[type="submit"]:hover {
   </div>
 
   <div class="painel-imagem">
-    <label for="imagem" class="botao-arquivo">
-      Escolher imagem
-    </label>
-
+    
     <input
       type="file"
       id="imagem"
@@ -574,8 +571,18 @@ input[type="submit"]:hover {
       }
     });
   </script>
-  <textarea id="pedidoImagem" placeholder="Descreva o que você quer mudar na imagem"></textarea>
+  <div class="acoes-imagem">
+  <label for="imagem" class="botao-arquivo">
+    Escolher imagem
+  </label>
+
   <button id="editarImagem">Editar imagem</button>
+</div>
+
+<textarea
+  id="pedidoImagem"
+  placeholder="Descreva o que você quer mudar na imagem">
+</textarea>
   <script>
   const inputImagem = document.getElementById("imagem");
   const previewImagem = document.getElementById("previewImagem");
