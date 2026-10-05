@@ -226,7 +226,28 @@ button[onclick*="editarImagem"]:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 30px rgba(124,58,237,0.35);
 }
+/* ===== ORGANIZAR ESCOLHER IMAGEM + EDITAR IMAGEM ===== */
 
+.acoes-imagem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.acoes-imagem label[for="imagem"],
+.acoes-imagem #editarImagem,
+.acoes-imagem .editar-imagem {
+  flex: 0 0 auto;
+}
+
+/* Descrição fica embaixo dos botões */
+.acoes-imagem + .barra-mensagem,
+.acoes-imagem + textarea,
+.acoes-imagem + input[type="text"] {
+  width: 100%;
+}
 /* Barra onde fica a descrição/mensagem */
 .barra-mensagem {
   display: flex;
