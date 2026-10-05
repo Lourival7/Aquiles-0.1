@@ -329,7 +329,47 @@ button[onclick*="editarImagem"]:hover,
 button[type="submit"]:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 30px rgba(124, 58, 237, 0.35);
-}  
+} 
+ /* ===== MENSAGEM DO AQUIL ES EM LARANJA FLUORESCENTE ===== */
+.mensagem-aquiles,
+.message.bot,
+.bot-message,
+.assistant-message,
+.chat-message.bot,
+.chat-box .message:first-child {
+  background: linear-gradient(135deg, #ff7a00, #ffb300) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 160, 0, 0.9) !important;
+  box-shadow: 0 0 18px rgba(255, 145, 0, 0.45) !important;
+  border-radius: 12px !important;
+  font-weight: 700;
+}
+
+/* ===== BOTÃO ENVIAR AZUL ===== */
+button[type="submit"],
+#enviar,
+.botao-enviar,
+input[type="submit"] {
+  min-height: 52px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35) !important;
+  transition: 0.2s ease;
+}
+
+button[type="submit"]:hover,
+#enviar:hover,
+.botao-enviar:hover,
+input[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.45) !important;
+}   
   </style>
 </head>
 
