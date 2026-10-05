@@ -229,6 +229,9 @@ async function editarImagem() {
   try {
     const resposta = await fetch("https://qqhltwlfooiyaalirwbi.supabase.co/functions/v1/editar-imagem", {
       method: "POST",
+      headers: {
+  "apikey": "sb_publishable_U1CpDb91_Q3Nn05Hfu9Wsw_9MT5kEhY"
+},
       body: formData
     });
 
