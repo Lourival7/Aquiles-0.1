@@ -79,17 +79,36 @@
         Olá, Lourival. Eu sou o Aquiles 0.1.
       </div>
     </div>
+<div class="entrada">
 
-    <div class="entrada">
-      <input
-        type="text"
-        id="entrada"
-        placeholder="Digite uma mensagem..."
-      >
-      <button onclick="enviarMensagem()">Enviar</button>
-      <input type="file" id="imagem" accept="image/*">
-      <img id="previewImagem" style="max-width:300px; display:none;">
-    </div>
+  <div class="barra-mensagem">
+    <input
+      type="text"
+      id="entrada"
+      placeholder="Digite uma mensagem..."
+    >
+    <button onclick="enviarMensagem()">Enviar</button>
+  </div>
+
+  <div class="painel-imagem">
+    <label for="imagem" class="botao-arquivo">
+      Escolher imagem
+    </label>
+
+    <input
+      type="file"
+      id="imagem"
+      accept="image/*"
+    >
+
+    <img
+      id="previewImagem"
+      style="display:none;"
+    >
+  </div>
+
+</div>
+
   </div>
 
   <script>
